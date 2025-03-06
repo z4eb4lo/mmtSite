@@ -2,94 +2,46 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Тёмная лаборатория физики</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Creepster&display=swap" rel="stylesheet">
+    <title>Тёмный Эксперимент</title>
     <style>
-        body {
-            margin: 0;
-            background: #0a0a0a;
-            color: #c70000;
-            font-family: 'Orbitron', sans-serif;
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-            background-image: 
-                linear-gradient(to bottom, rgba(10,10,10,0.1), #0a0a0a),
-                url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="%23330000" stroke-width="2" fill="none"/></svg>');
+        /* Новые анимации */
+        @keyframes explosion {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(10); opacity: 0; }
         }
 
-        .container {
-            padding: 2rem;
-            text-align: center;
+        @keyframes bloodDrip {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
         }
 
-        h1 {
-            font-size: 3rem;
-            text-shadow: 0 0 10px #ff0000;
-            animation: glow 2s ease-in-out infinite alternate;
+        @keyframes ringExpand {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(5); opacity: 0; }
         }
 
-        .sauron-eye {
+        .explosion-effect {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, #ff0000 0%, #330000 70%);
+            background: radial-gradient(circle, #ff0000 0%, rgba(255,0,0,0) 70%);
             border-radius: 50%;
-            display: none;
-            box-shadow: 0 0 50px #ff0000;
-            animation: pulsate 2s infinite;
+            animation: explosion 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            pointer-events: none;
         }
 
-        .spell {
+        .blood-drop {
             position: absolute;
-            font-family: 'Creepster', cursive;
-            color: #ff9900;
-            font-size: 24px;
-            opacity: 0;
-            animation: spell 3s linear;
+            width: 2px;
+            height: 50px;
+            background: linear-gradient(to bottom, #8a0303 0%, #ff0000 100%);
+            animation: bloodDrip 2s linear;
+            opacity: 0.7;
         }
 
-        @keyframes glow {
-            from { text-shadow: 0 0 10px #ff0000; }
-            to { text-shadow: 0 0 20px #ff0000, 0 0 30px #ff4444; }
-        }
-
-        @keyframes pulsate {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.1); }
-            100% { transform: translate(-50%, -50%) scale(1); }
-        }
-
-        @keyframes spell {
-            0% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-100px); }
-        }
-
-        .ghoul-mask {
-            position: fixed;
-            width: 100px;
-            right: 20px;
-            bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .experiment-btn {
-            background: #330000;
-            border: 2px solid #ff0000;
-            color: #fff;
-            padding: 15px 30px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 2rem;
-        }
-
-        .experiment-btn:hover {
-            background: #ff0000;
-            box-shadow: 0 0 20px #ff0000;
+        .magic-ring {
+            position: absolute;
+            border: 3px solid #ff9900;
+            border-radius: 50%;
+            animation: ringExpand 1s ease-out;
         }
     </style>
 </head>
@@ -104,7 +56,7 @@
     </div>
 
     <div class="sauron-eye" id="eye"></div>
-    <img src="https://avatars.mds.yandex.net/i?id=4e51908ca1bd70397fc9add8cdfa26b9_l-5877394-images-thumbs&n=13" class="ghoul-mask" alt="Маска гуля">
+    <img src="https://i.ibb.co/0jZ7Q3k/ghoul-mask.png" class="ghoul-mask" alt="Маска гуля">
 
     <script>
         function createSpell() {
@@ -134,6 +86,78 @@
         setInterval(() => {
             if(Math.random() < 0.1) showSauronEye();
         }, 10000);
+    </script>
+</body>
+    <script>
+        function createParticles(x, y) {
+            // Кровавые брызги
+            for(let i = 0; i < 50; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'blood-drop';
+                drop.style.left = x + Math.random() * 40 - 20 + 'px';
+                drop.style.top = y + 'px';
+                document.body.appendChild(drop);
+                setTimeout(() => drop.remove(), 2000);
+            }
+
+            // Магические кольца
+            const ring = document.createElement('div');
+            ring.className = 'magic-ring';
+            ring.style.left = x + 'px';
+            ring.style.top = y + 'px';
+            document.body.appendChild(ring);
+            setTimeout(() => ring.remove(), 1000);
+        }
+
+        function enhancedSauronEye() {
+            const eye = document.getElementById('eye');
+            eye.style.display = 'block';
+            
+            // 3D-трансформация
+            eye.style.transform = 'translate(-50%, -50%) perspective(1000px) rotateX(70deg)';
+            eye.style.animation = 'pulsate 0.5s infinite, eyeGlow 1s infinite';
+
+            // Искажение пространства
+            document.body.style.transform = 'skew(2deg, 1deg)';
+            setTimeout(() => document.body.style.transform = '', 500);
+        }
+
+        function showSauronEye() {
+            // Взрывной эффект
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion-effect';
+            explosion.style.left = window.innerWidth/2 + 'px';
+            explosion.style.top = window.innerHeight/2 + 'px';
+            document.body.appendChild(explosion);
+            setTimeout(() => explosion.remove(), 1500);
+
+            createParticles(window.innerWidth/2, window.innerHeight/2);
+            enhancedSauronEye();
+
+            // Анимация кнопки
+            const btn = document.querySelector('.experiment-btn');
+            btn.style.animation = 'btnExplode 0.5s forwards';
+            setTimeout(() => btn.style.animation = '', 500);
+
+            // Усиленные эффекты
+            document.documentElement.style.setProperty('--main-color', '#ff0000');
+            setTimeout(() => {
+                document.documentElement.style.setProperty('--main-color', '#c70000');
+            }, 1000);
+
+            // Улучшенные заклинания
+            const spellInterval = setInterval(() => {
+                createSpell();
+                if(Math.random() > 0.5) createSpell();
+            }, 100);
+
+            setTimeout(() => clearInterval(spellInterval), 3000);
+        }
+
+        // Новая CSS-переменная для управления цветом
+        :root {
+            --main-color: #c70000;
+        }
     </script>
 </body>
 </html>
