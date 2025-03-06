@@ -2,33 +2,92 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Лаборатория Тьмы</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <title>Тёмная Лаборатория Кагунэ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --blood-red: #ff0066;
+            --eye-glow: #ff4500;
+            --darkness: #0a0005;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(45deg, #000000, #2a0000);
-            font-family: 'Press Start 2P', cursive;
-            color: #ff4444;
+            background: 
+                radial-gradient(circle at 50% 50%, #2a0000 0%, var(--darkness) 70%),
+                repeating-linear-gradient(45deg, #000 0%, #000 3%, #1a0000 3%, #1a0000 6%);
+            font-family: 'Black Ops One', cursive;
+            color: var(--blood-red);
             overflow: hidden;
             position: relative;
+            min-height: 100vh;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32"><path fill="%23ff0066" d="M16 3.338c-7.738 0-14 6.262-14 14 0 7.738 6.262 14 14 14 7.738 0 14-6.262 14-14 0-7.738-6.262-14-14-14z"/></svg>'), auto;
+        }
+
+        .blood-particles {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .blood-particle {
+            position: absolute;
+            background: var(--blood-red);
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            animation: blood-fall linear infinite;
         }
 
         .container {
             max-width: 800px;
             margin: 50px auto;
-            padding: 20px;
-            border: 3px solid #ff0000;
-            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(0,0,0,0.9) 0%, rgba(10,0,5,0.9) 100%),
+                linear-gradient(45deg, transparent 98%, var(--blood-red) 100%);
             position: relative;
-            z-index: 1;
+            z-index: 2;
+            border: 3px solid var(--blood-red);
+            box-shadow: 0 0 50px rgba(255,0,102,0.3);
+            transform-style: preserve-3d;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, 
+                var(--blood-red) 0%, 
+                transparent 20%,
+                transparent 80%,
+                var(--blood-red) 100%);
+            z-index: -1;
+            animation: border-glow 3s infinite;
         }
 
         h1 {
             text-align: center;
-            text-shadow: 0 0 10px #ff0000;
-            animation: glow 2s infinite;
+            font-size: 2.5em;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            animation: 
+                text-float 3s ease-in-out infinite,
+                text-glitch 5s infinite;
+        }
+
+        .floating-runes {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.3;
+            animation: rune-float 10s infinite linear;
         }
 
         .eye-container {
@@ -38,49 +97,104 @@
             transform: translate(-50%, -50%);
             display: none;
             z-index: 999;
+            filter: drop-shadow(0 0 30px var(--eye-glow));
         }
 
         .sauron-eye {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, #8B0000 10%, #FF4500 50%, #000000 70%);
+            width: 300px;
+            height: 300px;
+            background: 
+                radial-gradient(circle at 50% 50%, 
+                    #000 0%, 
+                    #400000 30%, 
+                    #800000 50%, 
+                    #ff4500 70%,
+                    #000 90%);
             border-radius: 50%;
-            animation: eye-pulse 2s infinite;
-            box-shadow: 0 0 50px #FF0000;
+            animation: 
+                eye-pulse 2s infinite,
+                eye-flame 1s infinite;
+            position: relative;
+        }
+
+        .sauron-eye::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, #000 40%, #450000 70%);
+            border-radius: 50%;
         }
 
         .spell {
             position: absolute;
-            color: #00ff00;
-            font-size: 24px;
+            font-family: 'Press Start 2P', cursive;
+            text-shadow: 0 0 10px var(--blood-red);
             opacity: 0;
-            animation: spell 3s linear;
             pointer-events: none;
+            animation: spell 3s linear;
+            z-index: 9999;
         }
 
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 10px #ff0000; }
-            50% { text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000; }
+        @keyframes text-glitch {
+            0% { text-shadow: 3px 3px 0 #000; }
+            2% { text-shadow: -3px -3px 0 #0ff; }
+            4% { text-shadow: 3px -3px 0 #f0f; }
+            6% { text-shadow: -3px 3px 0 #ff0; }
+            8%, 100% { text-shadow: 3px 3px 0 #000; }
         }
 
-        @keyframes eye-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        @keyframes eye-flame {
+            0%, 100% { box-shadow: 0 0 100px 20px var(--eye-glow); }
+            50% { box-shadow: 0 0 150px 50px var(--eye-glow); }
+        }
+
+        @keyframes border-glow {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes blood-fall {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
         }
 
         @keyframes spell {
-            0% { opacity: 1; transform: translateY(0) rotate(0deg); }
-            100% { opacity: 0; transform: translateY(-100px) rotate(360deg); }
+            0% { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+            100% { opacity: 0; transform: translateY(-100vh) rotate(720deg) scale(3); }
+        }
+
+        @keyframes text-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes rune-float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
         }
     </style>
 </head>
 <body>
+    <div class="blood-particles"></div>
+
     <div class="container">
-        <h1>Лабораторная работа<br>7 марта 2025</h1>
-        <h2>Тёмная физика с<br>Метлиным М.Т.</h2>
-        <p>Группа СМ5-21: Вход в Бездну</p>
-        <p>Тема: Исследование Тёмных Энергий</p>
-        <p>⚠️ Опасность: Уровень Kagune ⚠️</p>
+        <div class="floating-runes" style="left:10%;top:20%">†</div>
+        <div class="floating-runes" style="right:15%;top:60%">‡</div>
+        <div class="floating-runes" style="left:30%;bottom:10%">♇</div>
+        
+        <h1>Лаборатория<br>Тёмного Пламени</h1>
+        <h2 style="text-align:center;animation: text-float 4s infinite">7 марта 2025 | М.Т. Метлин</h2>
+        
+        <div style="text-align:center;margin: 40px 0">
+            <p style="font-size:1.2em">Группа СМ5-21: Проклятые Исследователи</p>
+            <p style="color:#ff8888">Эксперимент №666: Слияние Миров</p>
+            <p style="border:1px dashed var(--blood-red);padding:10px">
+                ⚠️ Опасность: Уровень Кагуне-Рингвара ⚠️
+            </p>
+        </div>
     </div>
 
     <div class="eye-container">
@@ -88,37 +202,69 @@
     </div>
 
     <script>
-        // Генерация случайных заклинаний
-        const spells = ["Rin!","Tōkyō Ghoul","Ash nazg!","Kagune!","Uzumaki!","Mortal Sword"];
+        // Генератор крови
+        function createBlood() {
+            const blood = document.createElement('div');
+            blood.className = 'blood-particle';
+            blood.style.left = Math.random() * 100 + 'vw';
+            blood.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.querySelector('.blood-particles').appendChild(blood);
+            setTimeout(() => blood.remove(), 5000);
+        }
+
+        // Анимированные заклинания
+        const spells = ["RINKAKU!", "ASH NAZG!", "TŌKYŌ GHOUL!", "BALROG!", "KAGUNE!", "MORGOTH!"];
         
         function createSpell() {
             const spell = document.createElement('div');
             spell.className = 'spell';
             spell.textContent = spells[Math.floor(Math.random() * spells.length)];
-            spell.style.left = Math.random() * 100 + 'vw';
-            spell.style.top = Math.random() * 100 + 'vh';
+            spell.style.left = Math.random() * 95 + 'vw';
+            spell.style.top = Math.random() * 95 + 'vh';
+            spell.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            spell.style.fontSize = Math.random() * 20 + 20 + 'px';
             document.body.appendChild(spell);
-            
             setTimeout(() => spell.remove(), 3000);
         }
 
-        // Показ Ока Саурона
-        function showEye() {
+        // Око Саурона
+        function summonEye() {
             const eye = document.querySelector('.eye-container');
             eye.style.display = 'block';
-            setTimeout(() => eye.style.display = 'none', 3000);
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                eye.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 3000);
         }
 
-        // Таймеры
-        setInterval(createSpell, 1500);
-        setInterval(showEye, 10000);
+        // Инициализация эффектов
+        setInterval(createBlood, 50);
+        setInterval(createSpell, 800);
+        setInterval(summonEye, 15000);
 
-        // Случайный шум
-        document.body.addEventListener('mousemove', (e) => {
-            if(Math.random() > 0.95) {
-                createSpell();
-            }
+        // Эффект при наведении
+        document.querySelectorAll('p, h1, h2').forEach(el => {
+            el.addEventListener('mouseover', () => {
+                el.style.transform = 'scale(1.1)';
+                el.style.textShadow = '0 0 20px var(--blood-red))';
+                setTimeout(() => {
+                    el.style.transform = '';
+                    el.style.textShadow = '';
+                }, 500);
+            });
         });
+
+        // Случайные вспышки
+        setInterval(() => {
+            document.body.style.background = 
+                `radial-gradient(circle at ${Math.random() * 100}% ${Math.random() * 100}%, 
+                #ff0066 0%, transparent 70%), 
+                ${document.body.style.background}`;
+            setTimeout(() => {
+                document.body.style.background = document.body.style.background.replace(/radial-gradient\([^)]*\), /, '');
+            }, 100);
+        }, 3000);
     </script>
 </body>
 </html>
