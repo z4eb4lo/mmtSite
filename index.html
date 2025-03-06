@@ -2,162 +2,304 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Тёмный Эксперимент</title>
+    <title>Тень Физики - 07.03.2025</title>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <style>
-        /* Новые анимации */
-        @keyframes explosion {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(10); opacity: 0; }
+        :root {
+            --blood-red: #8b0000;
+            --darkness: #0a0505;
+            --fire: #ff4500;
+            --eye-glow: rgba(255, 69, 0, 0.5);
         }
 
-        @keyframes bloodDrip {
-            0% { transform: translateY(-100vh); }
-            100% { transform: translateY(100vh); }
+        body {
+            margin: 0;
+            background: var(--darkness);
+            color: #ffeded;
+            font-family: 'Ringbearer', fantasy;
+            overflow-x: hidden;
         }
 
-        @keyframes ringExpand {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(5); opacity: 0; }
-        }
-
-        .explosion-effect {
+        #particles-js {
             position: fixed;
-            background: radial-gradient(circle, #ff0000 0%, rgba(255,0,0,0) 70%);
-            border-radius: 50%;
-            animation: explosion 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
         }
 
-        .blood-drop {
+        header {
+            background: linear-gradient(45deg, 
+                #450000 0%, 
+                #1a0000 50%, 
+                #000000 100%);
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 3px solid var(--blood-red);
+        }
+
+        .floating-text {
             position: absolute;
-            width: 2px;
-            height: 50px;
-            background: linear-gradient(to bottom, #8a0303 0%, #ff0000 100%);
-            animation: bloodDrip 2s linear;
+            font-size: 1.2rem;
             opacity: 0.7;
+            animation: float 15s infinite linear;
         }
 
-        .magic-ring {
-            position: absolute;
-            border: 3px solid #ff9900;
+        @keyframes float {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        h1 {
+            font-size: 4rem;
+            text-shadow: 0 0 30px var(--fire);
+            position: relative;
+            background: linear-gradient(45deg, #ff4500, #8b0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleBurn 3s infinite;
+        }
+
+        @keyframes titleBurn {
+            0% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(20deg); }
+            100% { filter: hue-rotate(0deg); }
+        }
+
+        .ring-of-power {
+            width: 100px;
+            height: 100px;
+            position: fixed;
+            right: 2%;
+            top: 10%;
+            background: radial-gradient(circle, 
+                var(--fire) 0%, 
+                var(--blood-red) 50%, 
+                transparent 70%);
             border-radius: 50%;
-            animation: ringExpand 1s ease-out;
+            animation: ringPulse 2s infinite;
+            box-shadow: 0 0 50px var(--fire);
+        }
+
+        @keyframes ringPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .lava-card {
+            background: linear-gradient(45deg,
+                #2a0000,
+                #1a0000,
+                #2a0000);
+            border: 2px solid var(--blood-red);
+            border-radius: 10px;
+            margin: 2rem;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lava-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                transparent,
+                var(--eye-glow),
+                transparent);
+            animation: lavaFlow 6s infinite linear;
+        }
+
+        @keyframes lavaFlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .doomsday-clock {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 2em;
+            color: var(--fire);
+            animation: clockPulse 1s infinite;
+        }
+
+        @keyframes clockPulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        .eye-of-sauron {
+            position: fixed;
+            right: 5%;
+            top: 15%;
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, 
+                var(--fire) 0%, 
+                var(--blood-red) 30%, 
+                transparent 60%);
+            border-radius: 50%;
+            filter: blur(10px);
+            animation: eyePulse 5s infinite;
+            z-index: 999;
+        }
+
+        .eye-beam {
+            position: fixed;
+            right: 5%;
+            top: 15%;
+            width: 100vw;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent 10%, 
+                var(--fire) 50%, 
+                transparent 90%);
+            transform-origin: right center;
+            transform: rotate(-15deg);
+            filter: blur(1px);
+            opacity: 0;
+            animation: eyeBeam 8s infinite;
+        }
+
+        @keyframes eyePulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        @keyframes eyeBeam {
+            0% { opacity: 0; transform: rotate(-15deg) scaleX(0); }
+            25% { opacity: 0.8; transform: rotate(-15deg) scaleX(1); }
+            50% { opacity: 0; transform: rotate(-15deg) scaleX(0); }
+            100% { opacity: 0; }
+        }
+
+        .flash {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, 
+                rgba(255,69,0,0.2) 0%, 
+                transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            animation: randomFlash 15s infinite;
+        }
+
+        @keyframes randomFlash {
+            0% { opacity: 0; }
+            10% { opacity: 0.3; transform: scale(1.2); }
+            11% { opacity: 0; }
+            85% { opacity: 0; }
+            90% { opacity: 0.4; transform: scale(0.8); }
+            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Тёмный Эксперимент</h1>
-        <h2>7 марта 2025 года</h2>
-        <h3>Михаил Тимофеевич Метлин</h3>
-        <h3>Группа СМ5-21</h3>
-        
-        <button class="experiment-btn" onclick="showSauronEye()">Начать эксперимент</button>
+    <div id="particles-js"></div>
+    <div class="ring-of-power"></div>
+    <div class="eye-of-sauron"></div>
+    <div class="eye-beam"></div>
+    <div class="flash"></div>
+
+    <header>
+        <div class="floating-text">◈ Смерть предателям ◈ Хаос ◈ Вечность пламени ◈</div>
+        <h1>ЧЁРНАЯ ЛАБОРАТОРНАЯ</h1>
+        <div class="floating-text" style="animation-delay: -7s">⚠️ Око Саурона наблюдает ⚠️</div>
+    </header>
+
+    <div class="lava-card">
+        <h2>Михаил Тимофеевич Метлин</h2>
+        <p>Верховный жрец Тёмной Физики</p>
+        <p>Тема: "Кольца мощности и сингулярность зла"</p>
     </div>
 
-    <div class="sauron-eye" id="eye"></div>
-    <img src="https://i.ibb.co/0jZ7Q3k/ghoul-mask.png" class="ghoul-mask" alt="Маска гуля">
+    <div class="doomsday-clock">🕯️ 07.03.2025 🕯️</div>
 
     <script>
-        function createSpell() {
-            const spells = ['火', '闇', 'Ψ', '✡', '☠', '✸', '卍'];
-            const spell = document.createElement('div');
-            spell.className = 'spell';
-            spell.style.left = Math.random() * window.innerWidth + 'px';
-            spell.textContent = spells[Math.floor(Math.random() * spells.length)];
-            document.body.appendChild(spell);
-            
-            setTimeout(() => spell.remove(), 3000);
-        }
-
-        function showSauronEye() {
-            const eye = document.getElementById('eye');
-            eye.style.display = 'block';
-            setTimeout(() => eye.style.display = 'none', 3000);
-            
-            // Случайные заклинания
-            setInterval(createSpell, 500);
-            
-            // Вибрация браузера
-            if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        }
-
-        // Случайное появление глаза
-        setInterval(() => {
-            if(Math.random() < 0.1) showSauronEye();
-        }, 10000);
-    </script>
-</body>
-    <script>
-        function createParticles(x, y) {
-            // Кровавые брызги
-            for(let i = 0; i < 50; i++) {
-                const drop = document.createElement('div');
-                drop.className = 'blood-drop';
-                drop.style.left = x + Math.random() * 40 - 20 + 'px';
-                drop.style.top = y + 'px';
-                document.body.appendChild(drop);
-                setTimeout(() => drop.remove(), 2000);
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 150 },
+                color: { value: "#ff4500" },
+                opacity: { value: 0.5 },
+                size: { value: 3 },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: "bottom",
+                    straight: false
+                }
             }
+        });
 
-            // Магические кольца
-            const ring = document.createElement('div');
-            ring.className = 'magic-ring';
-            ring.style.left = x + 'px';
-            ring.style.top = y + 'px';
-            document.body.appendChild(ring);
-            setTimeout(() => ring.remove(), 1000);
-        }
-
-        function enhancedSauronEye() {
-            const eye = document.getElementById('eye');
-            eye.style.display = 'block';
+        function createAsh() {
+            const ash = document.createElement('div');
+            ash.style = `
+                position: fixed;
+                pointer-events: none;
+                color: #4a4a4a;
+                font-size: ${Math.random() * 20 + 10}px;
+                left: ${Math.random() * 100}vw;
+                animation: ashFall ${Math.random() * 5 + 5}s linear infinite;
+            `;
+            ash.innerHTML = '•';
+            document.body.appendChild(ash);
             
-            // 3D-трансформация
-            eye.style.transform = 'translate(-50%, -50%) perspective(1000px) rotateX(70deg)';
-            eye.style.animation = 'pulsate 0.5s infinite, eyeGlow 1s infinite';
-
-            // Искажение пространства
-            document.body.style.transform = 'skew(2deg, 1deg)';
-            setTimeout(() => document.body.style.transform = '', 500);
+            setTimeout(() => ash.remove(), 10000);
         }
 
-        function showSauronEye() {
-            // Взрывной эффект
-            const explosion = document.createElement('div');
-            explosion.className = 'explosion-effect';
-            explosion.style.left = window.innerWidth/2 + 'px';
-            explosion.style.top = window.innerHeight/2 + 'px';
-            document.body.appendChild(explosion);
-            setTimeout(() => explosion.remove(), 1500);
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ashFall {
+                0% { transform: translateY(-100vh) rotate(0deg); }
+                100% { transform: translateY(100vh) rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
 
-            createParticles(window.innerWidth/2, window.innerHeight/2);
-            enhancedSauronEye();
+        setInterval(createAsh, 100);
 
-            // Анимация кнопки
-            const btn = document.querySelector('.experiment-btn');
-            btn.style.animation = 'btnExplode 0.5s forwards';
-            setTimeout(() => btn.style.animation = '', 500);
+        window.addEventListener('mousemove', (e) => {
+            const ring = document.querySelector('.ring-of-power');
+            const x = (window.innerWidth - e.pageX * 2) / 90;
+            const y = (window.innerHeight - e.pageY * 2) / 90;
+            ring.style.transform = `translate(${x}px, ${y}px)`;
 
-            // Усиленные эффекты
-            document.documentElement.style.setProperty('--main-color', '#ff0000');
+            const angle = Math.atan2(
+                e.clientY - window.innerHeight * 0.15,
+                e.clientX - window.innerWidth * 0.95
+            ) * 180 / Math.PI;
+            
+            document.querySelector('.eye-beam').style.transform = `rotate(${angle - 90}deg)`;
+        });
+
+        setInterval(() => {
+            const eye = document.querySelector('.eye-of-sauron');
+            eye.style.filter = `blur(${Math.random() * 5 + 5}px) 
+                brightness(${Math.random() * 0.5 + 0.8})`;
+        }, 3000);
+
+        function createRandomFlash() {
+            const flash = document.createElement('div');
+            flash.className = 'flash';
+            flash.style.animation = `randomFlash ${Math.random() * 5 + 5}s infinite`;
+            document.body.appendChild(flash);
+            
             setTimeout(() => {
-                document.documentElement.style.setProperty('--main-color', '#c70000');
-            }, 1000);
-
-            // Улучшенные заклинания
-            const spellInterval = setInterval(() => {
-                createSpell();
-                if(Math.random() > 0.5) createSpell();
-            }, 100);
-
-            setTimeout(() => clearInterval(spellInterval), 3000);
+                flash.style.animation = 'none';
+                flash.remove();
+            }, 10000);
         }
 
-        // Новая CSS-переменная для управления цветом
-        :root {
-            --main-color: #c70000;
-        }
+        setInterval(createRandomFlash, 8000);
     </script>
 </body>
 </html>
