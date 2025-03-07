@@ -2,16 +2,26 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Тёмная лаборатория физики</title>
+    <title>Тёмная лаборатория СМ5-21</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&family=Cormorant+SC:wght@600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --blood-red: #ff0a0a;
+            --eye-glow: rgba(255, 60, 0, 0.8);
+        }
+
         body {
-            background: #0a0a0a;
-            color: #e81010;
+            background: 
+                linear-gradient(45deg, rgba(8,0,12,0.9) 30%, rgba(28,0,15,0.7)),
+                url('https://www.wallpaperflare.com/static/473/262/421/anime-tokyo-ghoul-kaneki-ken-tokyo-wallpaper.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            color: var(--blood-red);
             font-family: 'Orbitron', sans-serif;
             margin: 0;
             overflow-x: hidden;
             position: relative;
+            min-height: 100vh;
         }
 
         .container {
@@ -21,16 +31,18 @@
             border: 3px solid #5a0000;
             box-shadow: 0 0 30px #8b0000;
             position: relative;
-            z-index: 1;
-            background: rgba(0,0,0,0.9);
+            z-index: 2;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
         }
 
         h1 {
             font-family: 'Cormorant SC', serif;
             text-align: center;
             font-size: 4em;
-            text-shadow: 0 0 15px #ff0000;
+            text-shadow: 0 0 15px var(--blood-red);
             animation: titleGlow 2s infinite;
+            margin: 20px 0;
         }
 
         .lab-info {
@@ -38,110 +50,127 @@
             padding: 20px;
             margin: 30px 0;
             position: relative;
+            background: rgba(20, 0, 0, 0.4);
         }
 
         .sauron-eye {
             position: fixed;
             top: 50%;
             left: 50%;
+            width: 300px;
+            height: 300px;
             transform: translate(-50%, -50%);
             opacity: 0;
             transition: 1s;
             z-index: 999;
+            filter: drop-shadow(0 0 30px var(--eye-glow));
         }
 
-        .spell {
+        /* Анимации для гулей */
+        .ghoul {
             position: absolute;
-            color: #00ffff;
-            font-size: 24px;
+            width: 150px;
+            height: auto;
             opacity: 0;
-            animation: spell 3s linear;
+            animation: ghoulAppear 6s infinite;
+            z-index: 1;
         }
 
-        @keyframes titleGlow {
-            0%, 100% { text-shadow: 0 0 15px #ff0000; }
-            50% { text-shadow: 0 0 30px #ff4444; }
+        @keyframes ghoulAppear {
+            0% { opacity: 0; transform: scale(0.5); }
+            20% { opacity: 0.8; transform: scale(1); }
+            80% { opacity: 0.8; }
+            100% { opacity: 0; transform: translateY(-100px) scale(1.2); }
         }
 
-        @keyframes spell {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(3); }
+        /* Новые анимации */
+        @keyframes moveAndFade {
+            0% { opacity: 0.8; transform: translateX(-50%) scale(1); }
+            100% { opacity: 0; transform: translateX(50%) scale(0.5); }
         }
 
-        .particles {
+        .blood-drip {
             position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
+            width: 2px;
+            height: 50px;
+            background: var(--blood-red);
+            animation: drip 3s infinite;
+        }
+
+        @keyframes drip {
+            0% { transform: translateY(-100vh); }
+            100% { transform: translateY(100vh); }
         }
     </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
+    <div class="blood-effects"></div>
+    <img src="https://i.pinimg.com/originals/29/7c/1a/297c1a84f46b6f6ac33036642fa2813f.jpg" class="sauron-eye" id="sauronEye">
     
     <div class="container">
-        <h1>Тёмная лаборатория физики</h1>
+        <h1>Лаборатория Тёмной Энергии</h1>
         
         <div class="lab-info">
-            <h2>7 марта 2025 года</h2>
-            <p>Эксперименты с тёмной материей</p>
-            <p>Руководитель: Метлин Михаил Тимофеевич</p>
-            <p>Группа СМ5-21</p>
+            <h2>7 Марта 2025: Пограничные Состояния</h2>
+            <p>Эксперимент №731: Синтез Кагуне</p>
+            <p>Научный руководитель: Метлин М.Т.</p>
+            <p>Группа СМ5-21 | Уровень доступа: ЧЁРНЫЙ</p>
         </div>
 
         <div class="content">
-            <p>⚠️ Опасные эксперименты требуют максимальной концентрации!</p>
-            <p>🌀 Энергетический уровень: КРИТИЧЕСКИЙ</p>
+            <p>⚠️ ВНИМАНИЕ: Активен протокол "Кровавый Ордалик"</p>
+            <p>🌀 Показатели Рипалгации: 98.7%</p>
+            <p>☠️ Зафиксировано 12 ккал/моль</p>
         </div>
     </div>
 
-    <img src="https://i.pinimg.com/originals/29/7c/1a/297c1a84f46b6f6ac33036642fa2813f.jpg" class="sauron-eye" id="sauronEye">
-
     <script>
-        // Случайные заклинания
-        const spells = ['αδάμας', 'Фізика', 'E=mc²', 'Στρατος', 'θανατος', 'Ψυχή'];
-        
-        setInterval(() => {
-            const spell = document.createElement('div');
-            spell.className = 'spell';
-            spell.textContent = spells[Math.floor(Math.random() * spells.length)];
-            spell.style.left = Math.random() * 95 + '%';
-            spell.style.top = Math.random() * 95 + '%';
-            document.body.appendChild(spell);
-        }, 1500);
+        // Динамические гули
+        const ghouls = [
+            'https://i.imgur.com/Yq7Q7aE.png',
+            'https://i.imgur.com/9wZqJ9k.png',
+            'https://i.imgur.com/3JQ3Q3J.png'
+        ];
+
+        function createGhoul() {
+            const ghoul = document.createElement('img');
+            ghoul.className = 'ghoul';
+            ghoul.src = ghouls[Math.floor(Math.random() * ghouls.length)];
+            ghoul.style.left = Math.random() * 95 + '%';
+            ghoul.style.top = Math.random() * 95 + '%';
+            ghoul.style.animation = `moveAndFade ${5 + Math.random() * 10}s infinite`;
+            document.body.appendChild(ghoul);
+            
+            setTimeout(() => ghoul.remove(), 10000);
+        }
+        setInterval(createGhoul, 2000);
+
+        // Кровавые капли
+        function createBlood() {
+            const blood = document.createElement('div');
+            blood.className = 'blood-drip';
+            blood.style.left = Math.random() * 100 + '%';
+            document.body.appendChild(blood);
+            setTimeout(() => blood.remove(), 3000);
+        }
+        setInterval(createBlood, 100);
 
         // Око Саурона
         let eyeTimeout;
         function showSauronEye() {
-            clearTimeout(eyeTimeout);
             const eye = document.getElementById('sauronEye');
-            eye.style.opacity = '1';
-            eyeTimeout = setTimeout(() => {
-                eye.style.opacity = '0';
-            }, 3000);
+            eye.style.opacity = '0.7';
+            eye.style.transform = `translate(-50%, -50%) scale(${0.5 + Math.random()})`;
+            setTimeout(() => eye.style.opacity = '0', 1500);
         }
+        setInterval(showSauronEye, 10000);
 
-        // Случайное появление Ока
-        setInterval(showSauronEye, 15000);
-
-        // Частицы
-        function createParticles() {
-            const particles = document.getElementById('particles');
-            for (let i = 0; i < 100; i++) {
-                const particle = document.createElement('div');
-                particle.style.cssText = `
-                    position: absolute;
-                    width: 2px;
-                    height: 2px;
-                    background: #ff0000;
-                    border-radius: 50%;
-                    animation: particle ${5 + Math.random() * 5}s infinite linear;
-                `;
-                particles.appendChild(particle);
-            }
-        }
-        createParticles();
+        // Динамический фон
+        document.addEventListener('mousemove', (e) => {
+            const dx = (e.clientX - window.innerWidth/2) * 0.02;
+            const dy = (e.clientY - window.innerHeight/2) * 0.02;
+            document.body.style.backgroundPosition = `${50 + dx}% ${50 + dy}%`;
+        });
     </script>
 </body>
 </html>
