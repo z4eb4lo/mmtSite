@@ -1,163 +1,167 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Послевоенные герои Домашней Войны</title>
-    <style>
-        body {
-            margin: 0;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-                        url('https://images.unsplash.com/photo-1586348943529-beaae6c28db9?auto=format&fit=crop&w=1920') center/cover;
-            min-height: 100vh;
-            font-family: 'Bebas Neue', cursive;
-            color: #fff;
-            overflow-x: hidden;
-        }
-
-        .war-zone {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .rocket {
-            position: absolute;
-            bottom: -100px;
-            width: 20px;
-            height: 60px;
-            background: linear-gradient(#ff4444, #8B0000);
-            animation: launch 3s infinite;
-            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-        }
-
-        .explosion {
-            position: absolute;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            animation: explode 0.8s ease-out;
-        }
-
-        .smoke {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(rgba(100,100,100,0.3), transparent 70%);
-            animation: smoke 6s linear infinite;
-            filter: blur(10px);
-        }
-
-        @keyframes launch {
-            0% { transform: translateY(0) rotate(45deg); opacity: 1; }
-            100% { transform: translateY(-120vh) rotate(45deg); opacity: 0; }
-        }
-
-        @keyframes explode {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(8); opacity: 0; }
-        }
-
-        @keyframes smoke {
-            0% { transform: translateY(0) scale(0.5); opacity: 0.8; }
-            100% { transform: translateY(-100vh) scale(3); opacity: 0; }
-        }
-
-        .hero-card {
-            background: linear-gradient(45deg, rgba(50,50,50,0.8), rgba(30,30,30,0.9));
-            border: 1px solid #555;
-            box-shadow: 0 0 15px rgba(255,50,50,0.3);
-            transform: perspective(1000px) rotateX(10deg);
-            transition: 0.3s all;
-        }
-
-        .hero-card:hover {
-            transform: perspective(1000px) rotateX(0deg) translateY(-10px);
-            box-shadow: 0 10px 30px rgba(255,0,0,0.5);
-        }
-
-        .title {
-            font-size: 4em;
-            text-shadow: 3px 3px 0 #800,
-                        -1px -1px 0 #f00;
-            background: linear-gradient(#eee, #888);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 3px;
-        }
-
-        .bullet-hole {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle, #333 40%, #000 70%);
-            border-radius: 50%;
-            box-shadow: inset 0 0 10px #000;
-        }
-
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Герои Домашней Войны</title>
+  <style>
+    /* Сброс стилей */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: url('https://source.unsplash.com/1600x900/?bombed,city') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Arial', sans-serif;
+      color: #f0f0f0;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Тёмный полупрозрачный слой для усиления атмосферы */
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 1;
+    }
+    .container {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 50px 20px;
+    }
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px #000;
+    }
+    p {
+      font-size: 1.3em;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 3px #000;
+    }
+    h2 {
+      font-size: 2em;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px #000;
+    }
+    .hero-board {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin: 0 auto;
+      max-width: 800px;
+    }
+    .hero-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #555;
+      border-radius: 10px;
+      padding: 20px;
+      width: 200px;
+      font-size: 1.5em;
+      position: relative;
+      overflow: hidden;
+      text-shadow: 1px 1px 2px #000;
+    }
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+      transform: rotate(45deg);
+    }
+    /* Эффект взрыва */
+    .explosion {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: radial-gradient(circle, rgba(255,165,0,1) 0%, rgba(255,0,0,0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: explosion 1s ease-out forwards;
+      z-index: 3;
+    }
+    @keyframes explosion {
+      0% {
+        transform: scale(0.1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+    /* Эффект дыма */
+    .smoke {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: rgba(100, 100, 100, 0.5);
+      border-radius: 50%;
+      filter: blur(5px);
+      pointer-events: none;
+      animation: smoke 2s ease-out forwards;
+      z-index: 2;
+    }
+    @keyframes smoke {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.7;
+      }
+      100% {
+        transform: translateY(-100px) scale(2);
+        opacity: 0;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="war-zone" id="warZone"></div>
-    
-    <div class="container">
-        <div class="banner">
-            <h1 class="title">ПОБЕДИТЕЛИ<br>ВЕЛИКОЙ ДОМАШНЕЙ ВОЙНЫ</h1>
-            <h3>Герои, выстоявшие под огнём дедлайнов</h3>
-        </div>
-
-        <!-- Карточки героев остаются как в предыдущей версии -->
-
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>Успешная защита ДЗ</h1>
+    <p>Метлин Михаил Тимофеевич одержал блестящую победу в самой сложной битве – защите домашнего задания!</p>
+    <h2>Доска почётных героев сдачи ДЗ</h2>
+    <div class="hero-board">
+      <div class="hero-card">Зирюкин</div>
+      <div class="hero-card">Костиков</div>
+      <div class="hero-card">Ледащев</div>
+      <div class="hero-card">Космодемьянский</div>
+      <div class="hero-card">Николаева</div>
+      <div class="hero-card">Зеленин</div>
     </div>
-
-    <script>
-        function createWarEffects() {
-            const zone = document.getElementById('warZone');
-            
-            // Создание ракет и взрывов
-            setInterval(() => {
-                const rocket = document.createElement('div');
-                rocket.className = 'rocket';
-                rocket.style.left = Math.random() * 95 + '%';
-                zone.appendChild(rocket);
-
-                setTimeout(() => {
-                    const explosion = document.createElement('div');
-                    explosion.className = 'explosion';
-                    explosion.style.left = rocket.style.left;
-                    explosion.style.top = rocket.offsetTop + 'px';
-                    zone.appendChild(explosion);
-                    
-                    setTimeout(() => explosion.remove(), 800);
-                    rocket.remove();
-                }, 2500);
-            }, 3000);
-
-            // Создание дыма
-            setInterval(() => {
-                const smoke = document.createElement('div');
-                smoke.className = 'smoke';
-                smoke.style.left = Math.random() * 95 + '%';
-                zone.appendChild(smoke);
-                setTimeout(() => smoke.remove(), 6000);
-            }, 1500);
-
-            // Создание следов от пуль
-            for(let i = 0; i < 50; i++) {
-                const hole = document.createElement('div');
-                hole.className = 'bullet-hole';
-                hole.style.left = Math.random() * 95 + '%';
-                hole.style.top = Math.random() * 95 + '%';
-                hole.style.transform = `rotate(${Math.random()*360}deg) scale(${0.5+Math.random()})`;
-                zone.appendChild(hole);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            createWarEffects();
-            // Добавить создание фейерверков из предыдущей версии
-        });
-    </script>
+  </div>
+  <!-- Контейнер для динамических эффектов -->
+  <div id="effects"></div>
+  <script>
+    // Функция для создания эффекта взрыва
+    function createExplosion() {
+      const explosion = document.createElement('div');
+      explosion.classList.add('explosion');
+      // Случайное позиционирование по экрану
+      explosion.style.left = Math.random() * window.innerWidth + 'px';
+      explosion.style.top = Math.random() * window.innerHeight + 'px';
+      document.getElementById('effects').appendChild(explosion);
+      explosion.addEventListener('animationend', () => explosion.remove());
+    }
+    // Функция для создания эффекта дыма
+    function createSmoke() {
+      const smoke = document.createElement('div');
+      smoke.classList.add('smoke');
+      smoke.style.left = Math.random() * window.innerWidth + 'px';
+      smoke.style.top = Math.random() * window.innerHeight + 'px';
+      document.getElementById('effects').appendChild(smoke);
+      smoke.addEventListener('animationend', () => smoke.remove());
+    }
+    // Запуск эффектов с заданными интервалами
+    setInterval(createExplosion, 800);
+    setInterval(createSmoke, 1200);
+  </script>
 </body>
 </html>
