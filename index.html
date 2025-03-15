@@ -76,6 +76,7 @@
             text-align: center;
             cursor: pointer;
             animation: metlinAppear 2s ease-in-out infinite alternate;
+            z-index: 20;
         }
         @keyframes metlinAppear {
             from { transform: translate(-50%, -50%) scale(1); }
@@ -87,17 +88,24 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: url('https://i.gifer.com/origin/ee/ee1d2fd18d7bd13bba6e2be73a21ff20_w200.gif') no-repeat center center/cover;
+            background: url('https://media.giphy.com/media/3o7TKPdUkkbxiYqkli/giphy.gif') no-repeat center center/cover;
             opacity: 0;
             transition: opacity 1s ease-in-out;
-            z-index: 10;
+            z-index: 50;
         }
         .fall {
-            transform: translateY(100vh) rotate(720deg);
-            opacity: 0;
+            animation: fallDown 2s forwards;
+        }
+        @keyframes fallDown {
+            0% { transform: translateY(0) rotate(0); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
     </style>
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelector(".metlin").addEventListener("click", triggerExplosion);
+        });
+        
         function triggerExplosion() {
             document.body.style.background = 'black';
             document.querySelector('.container').classList.add('fall');
@@ -123,7 +131,7 @@
             <div class="hero">Николаева ⚡</div>
             <div class="hero">Зеленин 🎖️</div>
         </div>
-        <div class="metlin" onclick="triggerExplosion()">😈 МЕТЛИН МИХАИЛ ТИМОФЕЕВИЧ 😈</div>
+        <div class="metlin">😈 МЕТЛИН МИХАИЛ ТИМОФЕЕВИЧ 😈</div>
     </div>
 </body>
 </html>
