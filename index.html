@@ -8,15 +8,17 @@
         body {
             margin: 0;
             padding: 0;
-            background: url('https://s2.fotokto.ru/photo/full/193/1931607.jpg') no-repeat center center/cover;
+            background: url('https://stihi.ru/pics/2022/09/20/4344.jpg') no-repeat center center/cover;
             color: white;
             font-family: 'Arial', sans-serif;
             text-align: center;
             overflow: hidden;
+            transition: all 2s ease-in-out;
         }
         .container {
             position: relative;
             padding: 20px;
+            transition: all 2s ease-in-out;
         }
         h1 {
             font-size: 70px;
@@ -39,6 +41,7 @@
             flex-wrap: wrap;
             gap: 20px;
             margin-top: 20px;
+            transition: all 2s ease-in-out;
         }
         .hero {
             background: rgba(0, 0, 0, 0.9);
@@ -47,6 +50,7 @@
             box-shadow: 0 0 20px rgba(255, 0, 0, 1);
             font-size: 30px;
             animation: fadeIn 1.5s ease-in-out, pulse 2s infinite;
+            transition: all 2s ease-in-out;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.8); }
@@ -57,41 +61,58 @@
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
         }
-        .explosions {
-            position: absolute;
-            top: 0;
+        .metlin {
+            position: fixed;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.9);
+            padding: 20px;
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            border-radius: 20px;
+            box-shadow: 0 0 30px red;
+            text-align: center;
+            cursor: pointer;
+            animation: metlinAppear 2s ease-in-out infinite alternate;
+        }
+        @keyframes metlinAppear {
+            from { transform: translate(-50%, -50%) scale(1); }
+            to { transform: translate(-50%, -50%) scale(1.2); }
+        }
+        .explosion-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
-            pointer-events: none;
+            background: url('https://i.gifer.com/origin/ee/ee1d2fd18d7bd13bba6e2be73a21ff20_w200.gif') no-repeat center center/cover;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 10;
         }
-        .explosion {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: url('https://i.gifer.com/embedded/download/7gnQ.gif') no-repeat center center/contain;
-            animation: explosionAnimation 0.8s ease-out infinite;
-        }
-        @keyframes explosionAnimation {
-            from { transform: scale(0.5); opacity: 1; }
-            to { transform: scale(3); opacity: 0; }
-        }
-        .smoke {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: url('https://pa1.narvii.com/8521/1a1eb12909b1f5381486285c6e0b4d836a7e5e21r1-280-158_00.gif') no-repeat center center/contain;
-            opacity: 0.8;
-            animation: smokeAnimation 2.5s ease-in-out infinite;
-        }
-        @keyframes smokeAnimation {
-            from { transform: translateY(0); opacity: 0.5; }
-            to { transform: translateY(-60px); opacity: 1; }
+        .fall {
+            transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
         }
     </style>
+    <script>
+        function triggerExplosion() {
+            document.body.style.background = 'black';
+            document.querySelector('.container').classList.add('fall');
+            document.querySelectorAll('.hero, h1').forEach(el => {
+                el.classList.add('fall');
+            });
+            document.querySelector('.explosion-screen').style.opacity = '1';
+            setTimeout(() => {
+                document.body.innerHTML = '<h1 style="color: red; font-size: 100px; text-align: center; margin-top: 50vh;">💥 ЯДЕРНЫЙ ВЗРЫВ 💥</h1>';
+            }, 2000);
+        }
+    </script>
 </head>
 <body>
+    <div class="explosion-screen"></div>
     <div class="container">
         <h1>🔥 ГЕРОИ ВЕЛИКОЙ ВОЙНЫ С ДОМАШКОЙ 🔥</h1>
         <div class="heroes">
@@ -102,27 +123,7 @@
             <div class="hero">Николаева ⚡</div>
             <div class="hero">Зеленин 🎖️</div>
         </div>
-        <div class="explosions"></div>
+        <div class="metlin" onclick="triggerExplosion()">😈 МЕТЛИН МИХАИЛ ТИМОФЕЕВИЧ 😈</div>
     </div>
-    <script>
-        function createExplosion() {
-            let explosion = document.createElement('div');
-            explosion.classList.add('explosion');
-            explosion.style.top = Math.random() * window.innerHeight + 'px';
-            explosion.style.left = Math.random() * window.innerWidth + 'px';
-            document.querySelector('.explosions').appendChild(explosion);
-            setTimeout(() => explosion.remove(), 800);
-        }
-        function createSmoke() {
-            let smoke = document.createElement('div');
-            smoke.classList.add('smoke');
-            smoke.style.top = Math.random() * window.innerHeight + 'px';
-            smoke.style.left = Math.random() * window.innerWidth + 'px';
-            document.querySelector('.explosions').appendChild(smoke);
-            setTimeout(() => smoke.remove(), 2500);
-        }
-        setInterval(createExplosion, 300);
-        setInterval(createSmoke, 1200);
-    </script>
 </body>
 </html>
