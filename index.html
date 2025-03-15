@@ -18,13 +18,12 @@
       overflow: hidden;
       position: relative;
     }
-    /* Тёмный полупрозрачный слой для усиления атмосферы */
+    /* Тёмный наложенный слой для усиления атмосферы */
     .overlay {
       position: fixed;
       top: 0; left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
       z-index: 1;
     }
     .container {
@@ -48,34 +47,34 @@
       margin-bottom: 30px;
       text-shadow: 2px 2px 4px #000;
     }
+    /* Стили для доски героев */
     .hero-board {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
       margin: 0 auto;
-      max-width: 800px;
+      max-width: 1000px;
     }
     .hero-card {
       background: rgba(255, 255, 255, 0.1);
       border: 2px solid #555;
       border-radius: 10px;
-      padding: 20px;
-      width: 200px;
-      font-size: 1.5em;
+      padding: 15px;
+      width: 180px;
       position: relative;
       overflow: hidden;
       text-shadow: 1px 1px 2px #000;
     }
-    .hero-card::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-      transform: rotate(45deg);
+    .hero-card img.hero-img {
+      width: 100%;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      border: 2px solid #fff;
+    }
+    .hero-card .hero-name {
+      font-size: 1.5em;
+      font-weight: bold;
     }
     /* Эффект взрыва */
     .explosion {
@@ -94,7 +93,7 @@
         opacity: 1;
       }
       100% {
-        transform: scale(2);
+        transform: scale(2.5);
         opacity: 0;
       }
     }
@@ -116,7 +115,48 @@
         opacity: 0.7;
       }
       100% {
-        transform: translateY(-100px) scale(2);
+        transform: translateY(-120px) scale(2.5);
+        opacity: 0;
+      }
+    }
+    /* Эффект ракеты */
+    .rocket {
+      position: absolute;
+      width: 40px;
+      height: auto;
+      animation: rocket-flight 3s linear forwards;
+      pointer-events: none;
+      z-index: 4;
+    }
+    @keyframes rocket-flight {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-120vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    /* Эффект падающих обломков */
+    .debris {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: #888;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: debris-fall 3s linear forwards;
+      pointer-events: none;
+      z-index: 2;
+    }
+    @keyframes debris-fall {
+      0% {
+        transform: translate(0, 0);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translate(50px, 200px);
         opacity: 0;
       }
     }
@@ -126,31 +166,48 @@
   <div class="overlay"></div>
   <div class="container">
     <h1>Успешная защита ДЗ</h1>
-    <p>Метлин Михаил Тимофеевич одержал блестящую победу в самой сложной битве – защите домашнего задания!</p>
+    <p>Метлин Михаил Тимофеевич одержал блестящую победу в битве с Домашкой!</p>
     <h2>Доска почётных героев сдачи ДЗ</h2>
     <div class="hero-board">
-      <div class="hero-card">Зирюкин</div>
-      <div class="hero-card">Костиков</div>
-      <div class="hero-card">Ледащев</div>
-      <div class="hero-card">Космодемьянский</div>
-      <div class="hero-card">Николаева</div>
-      <div class="hero-card">Зеленин</div>
+      <div class="hero-card">
+        <img src="https://source.unsplash.com/200x200/?hero,war" alt="Герой Зирюкин" class="hero-img">
+        <div class="hero-name">Зирюкин</div>
+      </div>
+      <div class="hero-card">
+        <img src="https://source.unsplash.com/200x200/?hero,battle" alt="Герой Костиков" class="hero-img">
+        <div class="hero-name">Костиков</div>
+      </div>
+      <div class="hero-card">
+        <img src="https://source.unsplash.com/200x200/?hero,army" alt="Герой Ледащев" class="hero-img">
+        <div class="hero-name">Ледащев</div>
+      </div>
+      <div class="hero-card">
+        <img src="https://source.unsplash.com/200x200/?hero,warrior" alt="Герой Космодемьянский" class="hero-img">
+        <div class="hero-name">Космодемьянский</div>
+      </div>
+      <div class="hero-card">
+        <img src="https://source.unsplash.com/200x200/?hero,combat" alt="Герой Николаева" class="hero-img">
+        <div class="hero-name">Николаева</div>
+      </div>
+      <div class="hero-card">
+        <img src="https://source.unsplash.com/200x200/?hero,victory" alt="Герой Зеленин" class="hero-img">
+        <div class="hero-name">Зеленин</div>
+      </div>
     </div>
   </div>
   <!-- Контейнер для динамических эффектов -->
   <div id="effects"></div>
   <script>
-    // Функция для создания эффекта взрыва
+    // Функция для эффекта взрыва
     function createExplosion() {
       const explosion = document.createElement('div');
       explosion.classList.add('explosion');
-      // Случайное позиционирование по экрану
       explosion.style.left = Math.random() * window.innerWidth + 'px';
       explosion.style.top = Math.random() * window.innerHeight + 'px';
       document.getElementById('effects').appendChild(explosion);
       explosion.addEventListener('animationend', () => explosion.remove());
     }
-    // Функция для создания эффекта дыма
+    // Функция для эффекта дыма
     function createSmoke() {
       const smoke = document.createElement('div');
       smoke.classList.add('smoke');
@@ -159,9 +216,31 @@
       document.getElementById('effects').appendChild(smoke);
       smoke.addEventListener('animationend', () => smoke.remove());
     }
-    // Запуск эффектов с заданными интервалами
-    setInterval(createExplosion, 800);
-    setInterval(createSmoke, 1200);
+    // Функция для эффекта ракеты
+    function createRocket() {
+      const rocket = document.createElement('img');
+      rocket.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Rocket_icon.svg/1200px-Rocket_icon.svg.png';
+      rocket.classList.add('rocket');
+      rocket.style.left = Math.random() * (window.innerWidth - 40) + 'px';
+      rocket.style.bottom = '-50px';
+      rocket.style.animationDuration = (3 + Math.random() * 2) + 's';
+      document.getElementById('effects').appendChild(rocket);
+      rocket.addEventListener('animationend', () => rocket.remove());
+    }
+    // Функция для эффекта падающих обломков
+    function createDebris() {
+      const debris = document.createElement('div');
+      debris.classList.add('debris');
+      debris.style.left = Math.random() * window.innerWidth + 'px';
+      debris.style.top = Math.random() * window.innerHeight + 'px';
+      document.getElementById('effects').appendChild(debris);
+      debris.addEventListener('animationend', () => debris.remove());
+    }
+    // Запуск эффектов с разными интервалами для максимальной динамики
+    setInterval(createExplosion, 700);
+    setInterval(createSmoke, 1000);
+    setInterval(createRocket, 3000);
+    setInterval(createDebris, 1500);
   </script>
 </body>
 </html>
