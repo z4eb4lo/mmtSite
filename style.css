@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #000;
+    cursor: url('https://img.icons8.com/ios-filled/50/ffffff/target.png'), auto;
+}
+
+#gameContainer {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background: url('https://i.imgur.com/ZXqQZ9x.jpg') center/cover;
+}
+
+#metlin {
+    position: absolute;
+    width: 150px;
+    transition: all 0.3s;
+}
+
+#hud {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+    font-size: 24px;
+    text-shadow: 2px 2px 2px #000;
+}
+
+#message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ff0;
+    font-size: 48px;
+    font-family: 'Arial', sans-serif;
+    text-shadow: 3px 3px 3px #000;
+    display: none;
+}
+
+.bullet-hole {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: url('https://i.imgur.com/4Q7q7Qq.png') center/cover;
+    pointer-events: none;
+}
