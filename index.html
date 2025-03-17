@@ -18,65 +18,96 @@
 <body>
   <!-- Canvas для отрисовки игры -->
   <canvas id="gameCanvas"></canvas>
-  <!-- Звук выстрела (берём из интернета) -->
+  <!-- Звук выстрела -->
   <audio id="gunshot" src="https://free-sound-effects.net/mp3/01/free-sound-effects-AE1D05A6.mp3"></audio>
 
   <script>
-    // Получаем ссылку на canvas и устанавливаем его размеры
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Загружаем изображение фона (Doom‑стиль)
+    // Загружаем фон (Doom‑стиль)
     const bgImg = new Image();
-    bgImg.src = 'https://i.ytimg.com/vi/2Tims-NTXrE/maxresdefault.jpg'; // URL фона, можно заменить другим
+    bgImg.src = 'https://i.ytimg.com/vi/2Tims-NTXrE/maxresdefault.jpg';
 
     // Загружаем изображение цели (Метлина) из локального файла (файл metlin.png должен лежать в той же папке)
     const metlinImg = new Image();
     metlinImg.src = 'metlin.png';
 
-    // Элемент звука выстрела
+    // Звук выстрела
     const gunshotAudio = document.getElementById('gunshot');
 
-    // Начальные параметры цели (изображения Метлина)
+    // Игровые переменные
+    let score = 0;
+    let hp = 3;
+    let gameOver = false;
+
+    // Цель (Метлин) с параметрами для движения
     let target = {
       x: canvas.width / 2 - 50,
       y: canvas.height / 2 - 50,
       width: 100,
-      height: 100
+      height: 100,
+      // Случайная скорость от 1 до 5 по каждой оси, случайное направление
+      vx: (Math.random() * 4 + 1) * (Math.random() < 0.5 ? 1 : -1),
+      vy: (Math.random() * 4 + 1) * (Math.random() < 0.5 ? 1 : -1)
     };
 
     // Позиция мыши для отрисовки перекрестья
     let mousePos = { x: canvas.width / 2, y: canvas.height / 2 };
 
-    // Обновление позиции мыши при движении для рисования перекрестья
+    // Массив для хранения объектов взрывов
+    let explosions = [];
+
+    // Обновление позиции мыши
     canvas.addEventListener('mousemove', function(e) {
       const rect = canvas.getBoundingClientRect();
       mousePos.x = e.clientX - rect.left;
       mousePos.y = e.clientY - rect.top;
     });
 
-    // Обработка клика: воспроизводится звук выстрела и проверяется попадание по цели
+    // Обработка клика: звук выстрела, взрыв и проверка попадания
     canvas.addEventListener('click', function(e) {
-      // Сброс и воспроизведение звука
+      if (gameOver) return;
+
+      // Воспроизводим звук выстрела
       gunshotAudio.currentTime = 0;
       gunshotAudio.play();
 
-      // Определяем координаты клика относительно canvas
       const rect = canvas.getBoundingClientRect();
       const clickX = e.clientX - rect.left;
       const clickY = e.clientY - rect.top;
 
-      // Если клик попал в область цели, перемещаем её в случайное место
+      // Создаём объект взрыва в месте клика
+      explosions.push({
+        x: clickX,
+        y: clickY,
+        radius: 0,
+        maxRadius: 50,
+        alpha: 1
+      });
+
+      // Если клик попал в цель, увеличиваем счёт и изменяем параметры движения
       if (clickX >= target.x && clickX <= target.x + target.width &&
           clickY >= target.y && clickY <= target.y + target.height) {
+        score++;
+        // Изменяем скорость и направление случайным образом
+        target.vx = (Math.random() * 4 + 1) * (Math.random() < 0.5 ? 1 : -1);
+        target.vy = (Math.random() * 4 + 1) * (Math.random() < 0.5 ? 1 : -1);
+        // Перемещаем цель в случайное место
         target.x = Math.random() * (canvas.width - target.width);
         target.y = Math.random() * (canvas.height - target.height);
+      } else {
+        // Если промах, уменьшаем HP
+        hp--;
+        if (hp <= 0) {
+          gameOver = true;
+        }
       }
     });
 
-    // Функция для отрисовки перекрестья (навигация для прицеливания)
+    // Функция для отрисовки перекрестья
     function drawCrosshair() {
       ctx.beginPath();
       ctx.moveTo(mousePos.x - 15, mousePos.y);
@@ -88,18 +119,77 @@
       ctx.stroke();
     }
 
-    // Основная функция отрисовки: фон, цель и перекрестье
-    function draw() {
-      // Рисуем фон, растянутый на весь экран
-      ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-      // Рисуем изображение цели (Метлина)
-      ctx.drawImage(metlinImg, target.x, target.y, target.width, target.height);
-      // Рисуем перекрестье
-      drawCrosshair();
+    // Функция для отрисовки и обновления взрывов
+    function drawExplosions() {
+      for (let i = explosions.length - 1; i >= 0; i--) {
+        let exp = explosions[i];
+        ctx.beginPath();
+        ctx.arc(exp.x, exp.y, exp.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 165, 0, ${exp.alpha})`; // оранжевый цвет
+        ctx.fill();
+
+        // Увеличиваем радиус и уменьшаем прозрачность
+        exp.radius += 2;
+        exp.alpha -= 0.03;
+
+        // Удаляем взрыв, если он завершился
+        if (exp.alpha <= 0 || exp.radius >= exp.maxRadius) {
+          explosions.splice(i, 1);
+        }
+      }
     }
 
-    // Игровой цикл с перерисовкой экрана
+    // Функция для обновления позиции цели и её движения
+    function updateTarget() {
+      if (gameOver) return;
+      
+      target.x += target.vx;
+      target.y += target.vy;
+
+      // Отскок от краёв экрана
+      if (target.x <= 0 || target.x + target.width >= canvas.width) {
+        target.vx = -target.vx;
+        target.x = Math.max(0, Math.min(target.x, canvas.width - target.width));
+      }
+      if (target.y <= 0 || target.y + target.height >= canvas.height) {
+        target.vy = -target.vy;
+        target.y = Math.max(0, Math.min(target.y, canvas.height - target.height));
+      }
+    }
+
+    // Функция для отрисовки интерфейса (счёт и HP)
+    function drawUI() {
+      ctx.fillStyle = "white";
+      ctx.font = "20px Arial";
+      ctx.fillText("Счёт: " + score, 20, 30);
+      ctx.fillText("HP: " + hp, 20, 60);
+
+      if (gameOver) {
+        ctx.fillStyle = "red";
+        ctx.font = "50px Arial";
+        ctx.fillText("GAME OVER", canvas.width / 2 - 150, canvas.height / 2);
+      }
+    }
+
+    // Основная функция отрисовки: фон, цель, взрывы, перекрестье и UI
+    function draw() {
+      // Рисуем фон
+      ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+      // Рисуем цель (Метлина)
+      ctx.drawImage(metlinImg, target.x, target.y, target.width, target.height);
+      // Рисуем взрывы
+      drawExplosions();
+      // Рисуем перекрестье
+      drawCrosshair();
+      // Рисуем интерфейс
+      drawUI();
+    }
+
+    // Основной игровой цикл
     function gameLoop() {
+      if (!gameOver) {
+        updateTarget();
+      }
       draw();
       requestAnimationFrame(gameLoop);
     }
