@@ -9,7 +9,7 @@ body {
     width: 100vw;
     height: 100vh;
     position: relative;
-    background: url('https://i.imgur.com/ZXqQZ9x.jpg') center/cover;
+    background: url('https://i.ytimg.com/vi/2Tims-NTXrE/maxresdefault.jpg') center/cover;
 }
 
 #metlin {
@@ -44,6 +44,6 @@ body {
     position: absolute;
     width: 20px;
     height: 20px;
-    background: url('https://i.imgur.com/4Q7q7Qq.png') center/cover;
+    background: url('https://i.pinimg.com/736x/1a/78/5c/1a785ce3f47a2e103bef065e79d515b9.jpg') center/cover;
     pointer-events: none;
 }
